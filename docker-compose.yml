@@ -1,0 +1,52 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: pg
+    environment:
+      POSTGRES_USER: quiz
+      POSTGRES_PASSWORD: quiz
+      POSTGRES_DB: quiz
+    ports:
+      - "5432:5432"
+    volumes:
+     - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quiz -d quiz"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+    - "11434:11434"
+    environment:
+      - OLLAMA_NUM_GPU=0
+      - OLLAMA_KEEP_ALIVE=12h
+    volumes:
+      - ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+
+  app:
+    build: .
+    container_name: app
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://pg:5432/quiz
+      DB_USER: quiz
+      DB_PASS: quiz
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_EMBED_MODEL: nomic-embed-text
+      SIM_THRESHOLD: "0.75"
+    ports:
+     - "8080:8080"
+
+volumes:
+  pgdata:
+  ollama:

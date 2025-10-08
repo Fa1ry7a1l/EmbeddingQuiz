@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Result</title></head>
+<body>
+<h2>Результат</h2>
+<p>Ваш ответ: <b th:text="${userAnswer}"></b></p>
+<p>Вопрос: <i th:text="${q.questionText}"></i></p>
+<p>Вердикт: <span th:text="${ok} ? 'совпадает' : 'не совпадает'"></span></p>
+<p><a th:href="@{'/quiz/' + ${q.quiz.id}}">Назад к вопросам</a></p>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title th:text="${quiz.name}">Quiz</title></head>
+<body>
+<h2 th:text="${quiz.name}"></h2>
+<div th:each="q : ${questions}" style="margin-bottom:1rem;padding:1rem;border:1px solid #ccc;">
+    <div th:text="${q.questionText}"></div>
+    <form th:action="@{'/quiz/' + ${q.id} + '/answer'}" method="post">
+        <input type="text" name="userAnswer" placeholder="Ваш ответ" required>
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+</body>
+</html>
