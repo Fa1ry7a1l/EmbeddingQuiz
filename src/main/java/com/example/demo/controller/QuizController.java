@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/quiz")
@@ -28,8 +30,10 @@ public class QuizController {
 
     @PostMapping("/{questionId}/answer")
     public String answer(@PathVariable("questionId") Long questionId, @RequestParam("userAnswer") String userAnswer, Model m) {
-        boolean ok = similarityService.matches(questionId, userAnswer);
-        m.addAttribute("ok", ok);
+        List<Boolean> ok = similarityService.matches(questionId, userAnswer);
+        m.addAttribute("okCos", ok.get(0));
+        m.addAttribute("okL2", ok.get(1));
+        m.addAttribute("okIp", ok.get(2));
         m.addAttribute("userAnswer", userAnswer);
         m.addAttribute("q", questions.findById(questionId).orElseThrow());
         return "result";

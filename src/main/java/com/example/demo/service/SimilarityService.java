@@ -6,6 +6,8 @@ import com.example.demo.util.Distance;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SimilarityService {
@@ -14,16 +16,17 @@ public class SimilarityService {
     private final AppProperties props;
 
 
-    /**
-     * Возвращает true/false по косинусному расстоянию в pgvector
-     * Мы используем порог по similarity: sim >= threshold
-     * В pgvector косинусное расстояние d ∈ [0,2], similarity = 1 - d/2
-     */
-    public boolean matches(long questionId, String userAnswer) {
+    public List<Boolean> matches(long questionId, String userAnswer) {
         float[] v = ollama.embed(userAnswer);
-// конвертация: similarity >= T => (1 - d/2) >= T => d <= 2*(1-T)
-        double maxDist =  (1 - props.getSimilarity().getThreshold());
+
+        double maxCosineDist = (1 - props.getSimilarity().getThreshold());
+        double maxL2 = Math.sqrt(2.0 * (1 - props.getSimilarity().getThreshold()));
+        double maxIpDist = -props.getSimilarity().getThreshold()* 400;
         var vec = Distance.toVectorLiteral(v);
-        return !embeddings.matchByCosine(questionId, vec, maxDist).isEmpty();
+        return List.of(
+                !embeddings.matchByCosine(questionId, vec, maxCosineDist).isEmpty(),
+                !embeddings.matchByL2(questionId, vec, maxL2).isEmpty(),
+                !embeddings.matchByIP(questionId, vec, maxIpDist).isEmpty()
+        );
     }
 }

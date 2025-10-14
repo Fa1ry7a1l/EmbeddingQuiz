@@ -19,7 +19,7 @@ public class AppProperties {
     @Getter
     @Setter
     public static class Similarity {
-        private double threshold = 0.75; // по косинусу (similarity)
+        private double threshold = 0.75;
     }
     private Ollama ollama = new Ollama();
     private Similarity similarity = new Similarity();

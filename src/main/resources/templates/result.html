@@ -7,7 +7,9 @@
 <h2>Результат</h2>
 <p>Ваш ответ: <b th:text="${userAnswer}"></b></p>
 <p>Вопрос: <i th:text="${q.questionText}"></i></p>
-<p>Вердикт: <span th:text="${ok} ? 'совпадает' : 'не совпадает'"></span></p>
+<p>Вердикт косинус: <span th:text="${okCos} ? 'совпадает' : 'не совпадает'"></span></p>
+<p>Вердикт L2: <span th:text="${okL2} ? 'совпадает' : 'не совпадает'"></span></p>
+<p>Вердикт Ip: <span th:text="${okIp} ? 'совпадает' : 'не совпадает'"></span></p>
 <p><a th:href="@{'/quiz/' + ${q.quiz.id}}">Назад к вопросам</a></p>
 </body>
 </html>

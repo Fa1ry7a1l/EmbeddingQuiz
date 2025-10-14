@@ -17,6 +17,3 @@ CREATE TABLE IF NOT EXISTS embedding (
                                          question_id BIGINT PRIMARY KEY REFERENCES question(id) ON DELETE CASCADE,
     answer_embedding VECTOR(768) NOT NULL
     );
-
-CREATE INDEX IF NOT EXISTS idx_embedding_cosine
-    ON embedding USING hnsw (answer_embedding vector_cosine_ops);
